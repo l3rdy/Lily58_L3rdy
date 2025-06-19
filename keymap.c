@@ -124,13 +124,17 @@ static const char *get_layer_name(layer_state_t state) {
 }
 
 bool oled_task_user(void) {
-    oled_set_cursor(0, 0);
-    oled_write_ln(get_layer_name(layer_state), false);
-    luna_update_status();
-    render_luna(0,9);
-    return false;
+    if (is_keyboard_master()) {
+        oled_set_cursor(0, 0);
+        oled_write_ln(get_layer_name(layer_state), false);
+        luna_update_status();
+        render_luna(0, 9);
+        //oled_render_layer_state();
+        //oled_render_keylog();
+        return false;
+    }
+    return true;
 }
-
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (!is_keyboard_master())
         return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
