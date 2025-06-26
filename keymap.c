@@ -33,21 +33,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_QUOT,
         KC_LSFT, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_MINS,
         KC_LCTL, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_LBRC, KC_RBRC, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT,
-        KC_LGUI, KC_BSPC, MO(_NAV), KC_SPC, KC_ENT, MO(_FN), KC_LALT, KC_RGUI
+        KC_LGUI, KC_BSPC, MO(_NAV), KC_SPC, KC_SPC, MO(_FN), KC_LALT, KC_RGUI
     ),
     [_NAV] = LAYOUT(
         KC_ESC, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_TRNS, QK_MACRO_0, KC_UP, QK_MACRO_1, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_NO, QK_MACRO_2, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_TRNS, KC_HOME, KC_NO, KC_END, KC_NO, KC_DEL, KC_NO, KC_NO, KC_PIPE, KC_GRV, KC_LCBR, KC_RCBR, KC_NO, KC_NO,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MO(_RGB), KC_TRNS, KC_TRNS
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_ENT, KC_ENT, MO(_RGB), KC_TRNS, KC_TRNS
     ),
     [_FN] = LAYOUT(
         KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
         KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_AT, UE_LO_KC, KC_NO, OE_LO_KC, KC_NO, KC_F12,
         KC_TRNS, AE_LO_KC, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_QUOT, KC_QUOT, KC_NO, KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS, KC_NO,
-        KC_TRNS, KC_TRNS, MO(_RGB), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+        KC_TRNS, KC_TRNS, MO(_RGB), KC_ENT, KC_ENT, KC_TRNS, KC_TRNS, KC_TRNS
     ),
     [_RGB] = LAYOUT(
         RGB_TOG, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
@@ -122,7 +122,7 @@ static const char *get_layer_name(layer_state_t state) {
         default:    return "UNDEF";
     }
 }
-
+const char *read_logo(void);
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_set_cursor(0, 0);
@@ -132,8 +132,10 @@ bool oled_task_user(void) {
         //oled_render_layer_state();
         //oled_render_keylog();
         return false;
-    }
-    return true;
+    } else {
+    oled_write(read_logo(), false);
+  }
+    return false;
 }
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (!is_keyboard_master())
